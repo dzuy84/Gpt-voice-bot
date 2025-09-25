@@ -27,33 +27,35 @@ const __dirname = path.dirname(__filename);
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+// =============================================================
+// HÀM GỌI API SAPO (PHIÊN BẢN TEST)
+// =============================================================
 async function searchSapoProducts(query) {
   const storeName = process.env.SAPO_STORE_NAME;
   const apiKey = process.env.SAPO_API_KEY;
   const apiSecret = process.env.SAPO_API_SECRET;
-  // SỬA ĐỔI QUAN TRỌNG: Cập nhật phiên bản API Sapo
   const apiVersion = "2025-09"; 
   const apiUrl = `https://${storeName}.mysapo.net/admin/api/${apiVersion}/products.json`;
 
-  console.log(`🔎 Đang tìm kiếm sản phẩm trên Sapo với từ khóa: "${query}"`);
+  console.log(`🔎 BÀI TEST: Đang thử lấy 5 sản phẩm đầu tiên...`);
 
   try {
+    // TẠM THỜI XÓA LOGIC TÌM KIẾM ĐỂ TEST KẾT NỐI
     const response = await axios.get(apiUrl, {
       auth: {
         username: apiKey,
         password: apiSecret
       },
       params: {
-        query: query,
-        limit: 5
+        limit: 5 // Chỉ lấy 5 sản phẩm
       }
     });
 
     if (response.data && response.data.products.length > 0) {
-      console.log(`✅ Tìm thấy ${response.data.products.length} sản phẩm.`);
+      console.log(`✅ TEST THÀNH CÔNG! Tìm thấy ${response.data.products.length} sản phẩm.`);
       return response.data.products;
     } else {
-      console.log('❌ Không tìm thấy sản phẩm nào.');
+      console.log('❌ TEST THẤT BẠI! Không lấy được sản phẩm nào.');
       return [];
     }
   } catch (error) {
@@ -62,7 +64,8 @@ async function searchSapoProducts(query) {
   }
 }
 
-app.post("/api/chat", async (req, res). => {
+// API Chat Endpoint
+app.post("/api/chat", async (req, res) => {
   try {
     const { message } = req.body;
     if (!message) {
@@ -78,6 +81,7 @@ app.post("/api/chat", async (req, res). => {
     `;
 
     if (products.length > 0) {
+      // Vì đang test, bot sẽ trả lời dựa trên 5 sản phẩm bất kỳ nó lấy được
       const productInfo = products.map(p => `- ${p.name} (Giá: ${p.variants[0].price}đ)`).join('\n');
       systemContent += `
         Dựa vào thông tin các sản phẩm tìm thấy sau đây để trả lời câu hỏi của khách hàng. Hãy tư vấn một cách tự nhiên.
@@ -107,7 +111,8 @@ app.post("/api/chat", async (req, res). => {
   }
 });
 
-app.post("/api/voice", async (req, res). => {
+// API Voice Endpoint
+app.post("/api/voice", async (req, res) => {
   try {
     const { text } = req.body;
     if (!text) {
