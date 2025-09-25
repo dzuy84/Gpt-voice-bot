@@ -18,13 +18,7 @@
             --border-color: rgba(255, 255, 255, 0.1);
             --shadow-color: rgba(0, 0, 0, 0.4);
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Poppins', sans-serif;
             color: var(--text-color-light);
@@ -35,7 +29,6 @@
             padding: 15px;
             background-color: #121212; 
         }
-
         .chat-container {
             width: 100%;
             max-width: 600px;
@@ -51,7 +44,6 @@
             background-image: url('https://www.transparenttextures.com/patterns/dark-denim-3.png');
             background-repeat: repeat;
         }
-
         header {
             padding: 20px 25px;
             background-color: rgba(0, 0, 0, 0.3);
@@ -63,125 +55,24 @@
             gap: 10px;
             flex-shrink: 0;
         }
-
-        header h1 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin: 0;
-            letter-spacing: 0.5px;
-        }
-
-        .online-dot {
-            width: 10px;
-            height: 10px;
-            background-color: #4CAF50;
-            border-radius: 50%;
-            box-shadow: 0 0 5px #4CAF50, 0 0 10px #4CAF50;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.9); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(0.9); opacity: 0.7; }
-        }
-
-        .chat-window {
-            flex-grow: 1;
-            padding: 20px 25px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background-color: rgba(0, 0, 0, 0.2); 
-        }
-
+        header h1 { font-size: 1.4rem; font-weight: 600; margin: 0; letter-spacing: 0.5px; }
+        .online-dot { width: 10px; height: 10px; background-color: #4CAF50; border-radius: 50%; box-shadow: 0 0 5px #4CAF50, 0 0 10px #4CAF50; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.7; } }
+        .chat-window { flex-grow: 1; padding: 20px 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background-color: rgba(0, 0, 0, 0.2); }
         .chat-window::-webkit-scrollbar { width: 8px; }
         .chat-window::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
         .chat-window::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 10px; }
         .chat-window::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 255, 255, 0.3); }
-
-        .message {
-            max-width: 85%;
-            padding: 12px 18px;
-            border-radius: 20px;
-            line-height: 1.6;
-            font-weight: 300;
-            opacity: 0;
-            transform: translateY(15px);
-            animation: fadeIn 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .user-message {
-            background-color: var(--user-bubble-bg);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 8px;
-        }
-
-        .bot-message {
-            background-color: var(--bot-bubble-bg);
-            color: var(--text-color-light);
-            align-self: flex-start;
-            border-bottom-left-radius: 8px;
-        }
-        .bot-message b {
-            color: var(--secondary-color);
-            font-weight: 500;
-        }
-
-        .error-message {
-            background-color: rgba(239, 83, 80, 0.2);
-            color: #ffcdd2;
-            align-self: flex-start;
-            border-bottom-left-radius: 8px;
-        }
-
-        .chat-controls {
-            display: flex;
-            gap: 10px;
-            padding: 15px 20px;
-            border-top: 1px solid var(--border-color);
-            background-color: rgba(0, 0, 0, 0.3);
-            flex-shrink: 0;
-        }
-
-        #userInput {
-            flex-grow: 1;
-            background-color: var(--input-bg);
-            border: 1px solid transparent;
-            border-radius: 25px;
-            padding: 0 20px;
-            color: var(--text-color-light);
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s ease, background-color 0.3s ease;
-            height: 50px;
-        }
-        #userInput:focus {
-            border-color: var(--primary-color);
-            background-color: rgba(0, 0, 0, 0.2);
-        }
-
-        .control-btn {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: #121212;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            flex-shrink: 0;
-        }
+        .message { max-width: 85%; padding: 12px 18px; border-radius: 20px; line-height: 1.6; font-weight: 300; opacity: 0; transform: translateY(15px); animation: fadeIn 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        .user-message { background-color: var(--user-bubble-bg); color: white; align-self: flex-end; border-bottom-right-radius: 8px; }
+        .bot-message { background-color: var(--bot-bubble-bg); color: var(--text-color-light); align-self: flex-start; border-bottom-left-radius: 8px; }
+        .bot-message b { color: var(--secondary-color); font-weight: 500; }
+        .error-message { background-color: rgba(239, 83, 80, 0.2); color: #ffcdd2; align-self: flex-start; border-bottom-left-radius: 8px; }
+        .chat-controls { display: flex; gap: 10px; padding: 15px 20px; border-top: 1px solid var(--border-color); background-color: rgba(0, 0, 0, 0.3); flex-shrink: 0; }
+        #userInput { flex-grow: 1; background-color: var(--input-bg); border: 1px solid transparent; border-radius: 25px; padding: 0 20px; color: var(--text-color-light); font-size: 1rem; outline: none; transition: border-color 0.3s ease, background-color 0.3s ease; height: 50px; }
+        #userInput:focus { border-color: var(--primary-color); background-color: rgba(0, 0, 0, 0.2); }
+        .control-btn { width: 50px; height: 50px; border: none; border-radius: 50%; background-color: var(--primary-color); color: #121212; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: background-color 0.3s ease, transform 0.2s ease; flex-shrink: 0; }
         .control-btn:hover { background-color: #a96cfa; }
         .control-btn:active { transform: scale(0.9); }
         .control-btn svg { width: 24px; height: 24px; }
@@ -189,16 +80,12 @@
     </style>
 </head>
 <body>
-
     <div class="chat-container">
         <header>
             <div class="online-dot"></div>
             <h1>Hỗ trợ trực tuyến 24/7</h1>
         </header>
-
-        <div id="chat" class="chat-window">
-            </div>
-
+        <div id="chat" class="chat-window"></div>
         <div class="chat-controls">
             <input id="userInput" type="text" placeholder="Hỏi tôi bất cứ điều gì..." onkeydown="if(event.key==='Enter') sendMessage()" />
             <button id="sendBtn" class="control-btn" onclick="sendMessage()">
@@ -209,24 +96,18 @@
             </button>
         </div>
     </div>
-
     <script>
         const chatBox = document.getElementById("chat");
         const input = document.getElementById("userInput");
         const voiceBtn = document.getElementById("voiceBtn");
         let currentAudio = null;
-
         async function handleUserMessage(text) {
             if (!text) return;
             appendMessage("Bạn", text, "user-message");
             input.value = "";
             const thinkingMessage = appendMessage("GPT", "...", "bot-message");
             try {
-                const res = await fetch("/api/chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: text })
-                });
+                const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: text }) });
                 if (!res.ok) { throw new Error(`Server error: ${res.status}`); }
                 const data = await res.json();
                 thinkingMessage.innerHTML = `<b>GPT:</b> ${data.reply}`;
@@ -235,13 +116,9 @@
                 console.error("Fetch error:", err);
                 thinkingMessage.innerHTML = `<b>⚠️ Lỗi:</b> Không thể kết nối tới server.`;
                 thinkingMessage.classList.add("error-message");
-            } finally {
-                 chatBox.scrollTop = chatBox.scrollHeight;
-            }
+            } finally { chatBox.scrollTop = chatBox.scrollHeight; }
         }
-
         function sendMessage() { handleUserMessage(input.value.trim()); }
-
         function appendMessage(sender, text, cls) {
             const div = document.createElement("div");
             div.className = `message ${cls}`;
@@ -250,7 +127,6 @@
             chatBox.scrollTop = chatBox.scrollHeight;
             return div;
         }
-
         function startVoice() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) { return alert("Rất tiếc, trình duyệt của bạn không hỗ trợ nhận dạng giọng nói."); }
@@ -263,34 +139,20 @@
             recognition.onresult = (event) => { handleUserMessage(event.results[0][0].transcript); };
             recognition.onspeechend = () => recognition.stop();
             recognition.onend = () => voiceBtn.classList.remove("recording");
-            recognition.onerror = (event) => {
-                console.error("Speech recognition error:", event.error);
-                appendMessage("⚠️ Lỗi", "Không thể nhận dạng giọng nói.", "error-message");
-            };
+            recognition.onerror = (event) => { console.error("Speech recognition error:", event.error); appendMessage("⚠️ Lỗi", "Không thể nhận dạng giọng nói.", "error-message"); };
         }
-
         async function speakFromServer(text) {
             if (!text) return;
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-            }
+            if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
             try {
-                const response = await fetch('/api/voice', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: text }),
-                });
+                const response = await fetch('/api/voice', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: text }), });
                 if (!response.ok) { throw new Error('Network response was not ok.'); }
                 const audioBlob = await response.blob();
                 const audioUrl = URL.createObjectURL(audioBlob);
                 currentAudio = new Audio(audioUrl);
                 currentAudio.play();
-            } catch (error) {
-                console.error('Error fetching or playing audio:', error);
-            }
+            } catch (error) { console.error('Error fetching or playing audio:', error); }
         }
-        
         setTimeout(() => {
             const welcomeText = "Xin chào! Em là trợ lý ảo của Ly Uống Rượu Vang. Em có thể giúp gì cho anh/chị hôm nay ạ?";
             appendMessage("GPT", welcomeText, "bot-message");
