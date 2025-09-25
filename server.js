@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // =============================================================
-// HÀM GỌI API SAPO (PHIÊN BẢN TEST)
+// HÀM GỌI API SAPO (CẬP NHẬT THEO CÁCH MỚI)
 // =============================================================
 async function searchSapoProducts(query) {
   const storeName = process.env.SAPO_STORE_NAME;
@@ -37,25 +37,30 @@ async function searchSapoProducts(query) {
   const apiVersion = "2025-09"; 
   const apiUrl = `https://${storeName}.mysapo.net/admin/api/${apiVersion}/products.json`;
 
-  console.log(`🔎 BÀI TEST: Đang thử lấy 5 sản phẩm đầu tiên...`);
+  // TẠO HEADER AUTHORIZATION BẰNG TAY
+  const authHeader = Buffer.from(`${apiKey}:${apiSecret}`).toString('base64');
+
+  console.log(`🔎 Đang tìm kiếm sản phẩm trên Sapo với từ khóa: "${query}"`);
 
   try {
-    // TẠM THỜI XÓA LOGIC TÌM KIẾM ĐỂ TEST KẾT NỐI
     const response = await axios.get(apiUrl, {
-      auth: {
-        username: apiKey,
-        password: apiSecret
+      // THAY ĐỔI QUAN TRỌNG:
+      // Bỏ trường 'auth' và thay bằng 'headers' tự tạo
+      headers: {
+        'Authorization': `Basic ${authHeader}`,
+        'Content-Type': 'application/json'
       },
       params: {
-        limit: 5 // Chỉ lấy 5 sản phẩm
+        query: query,
+        limit: 5
       }
     });
 
     if (response.data && response.data.products.length > 0) {
-      console.log(`✅ TEST THÀNH CÔNG! Tìm thấy ${response.data.products.length} sản phẩm.`);
+      console.log(`✅ Tìm thấy ${response.data.products.length} sản phẩm.`);
       return response.data.products;
     } else {
-      console.log('❌ TEST THẤT BẠI! Không lấy được sản phẩm nào.');
+      console.log('❌ Không tìm thấy sản phẩm nào.');
       return [];
     }
   } catch (error) {
@@ -81,7 +86,6 @@ app.post("/api/chat", async (req, res) => {
     `;
 
     if (products.length > 0) {
-      // Vì đang test, bot sẽ trả lời dựa trên 5 sản phẩm bất kỳ nó lấy được
       const productInfo = products.map(p => `- ${p.name} (Giá: ${p.variants[0].price}đ)`).join('\n');
       systemContent += `
         Dựa vào thông tin các sản phẩm tìm thấy sau đây để trả lời câu hỏi của khách hàng. Hãy tư vấn một cách tự nhiên.
