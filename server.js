@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import OpenAI from "openai";
-import axios from 'axios'; // Import thư viện axios
+import axios from 'axios';
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 10000;
 
 // Validate API Keys
 if (!process.env.OPENAI_API_KEY || !process.env.SAPO_API_KEY || !process.env.SAPO_API_SECRET) {
-  console.error("❌ Lỗi: Vui lòng kiểm tra lại các biến môi trường OPENAI_API_KEY, SAPO_API_KEY, SAPO_API_SECRET trong file .env.");
+  console.error("❌ Lỗi: Vui lòng kiểm tra lại các biến môi trường trong phần Environment của Render.");
   process.exit(1);
 }
 
@@ -30,26 +30,28 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // =============================================================
-// HÀM GỌI API SAPO ĐỂ TÌM SẢN PHẨM (Dùng Basic Authentication)
+// HÀM GỌI API SAPO (ĐÃ CẬP NHẬT)
 // =============================================================
 async function searchSapoProducts(query) {
   const storeName = process.env.SAPO_STORE_NAME;
   const apiKey = process.env.SAPO_API_KEY;
   const apiSecret = process.env.SAPO_API_SECRET;
-  const apiUrl = `https://${storeName}.mysapo.net/admin/api/2025-09/products.json`;
+  const apiVersion = "2024-03"; 
+  const apiUrl = `https://${storeName}.mysapo.net/admin/api/${apiVersion}/products.json`;
 
   console.log(`🔎 Đang tìm kiếm sản phẩm trên Sapo với từ khóa: "${query}"`);
 
   try {
     const response = await axios.get(apiUrl, {
-      // Xác thực bằng API Key và Secret Key
       auth: {
         username: apiKey,
         password: apiSecret
       },
       params: {
-        title: query, // Tìm sản phẩm có tiêu đề chứa từ khóa
-        limit: 5      // Giới hạn lấy 5 sản phẩm để câu trả lời không quá dài
+        // THAY ĐỔI QUAN TRỌNG:
+        // 'query' sẽ tìm kiếm từ khóa trên nhiều trường (tên, mô tả, tags...)
+        query: query, 
+        limit: 5
       }
     });
 
@@ -62,7 +64,7 @@ async function searchSapoProducts(query) {
     }
   } catch (error) {
     console.error('❌ Lỗi khi gọi API Sapo:', error.response ? error.response.data : error.message);
-    return []; // Trả về mảng rỗng nếu có lỗi
+    return [];
   }
 }
 
@@ -74,7 +76,6 @@ app.post("/api/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required." });
     }
 
-    // Bước 1: Tìm kiếm sản phẩm trên Sapo dựa vào tin nhắn của người dùng
     const products = await searchSapoProducts(message);
 
     let systemContent = `
@@ -83,7 +84,6 @@ app.post("/api/chat", async (req, res) => {
       Nếu khách hỏi ngoài phạm vi, hãy trả lời lịch sự: "Dạ, em xin lỗi, em chỉ có thể hỗ trợ các thông tin về sản phẩm tại lyuongruouvang.com thôi ạ."
     `;
 
-    // Bước 2: Tạo prompt dựa vào kết quả tìm kiếm
     if (products.length > 0) {
       const productInfo = products.map(p => `- ${p.name} (Giá: ${p.variants[0].price}đ)`).join('\n');
       systemContent += `
@@ -97,7 +97,6 @@ app.post("/api/chat", async (req, res) => {
       `;
     }
 
-    // Bước 3: Gọi API OpenAI với prompt đã được làm giàu thông tin
     const completion = await client.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -115,25 +114,22 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// API Voice Endpoint (Text-to-Speech)
+// API Voice Endpoint
 app.post("/api/voice", async (req, res) => {
   try {
     const { text } = req.body;
     if (!text) {
       return res.status(400).json({ error: "Text is required." });
     }
-
     const speech = await client.audio.speech.create({
       model: "tts-1",
       voice: "nova",
       input: text,
       response_format: "mp3",
     });
-
     const buffer = Buffer.from(await speech.arrayBuffer());
     res.setHeader("Content-Type", "audio/mpeg");
     res.send(buffer);
-
   } catch (err) {
     console.error("❌ Voice error:", err);
     res.status(500).json({ error: "Đã có lỗi xảy ra khi tạo giọng nói." });
@@ -141,5 +137,5 @@ app.post("/api/voice", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
+  console.log(`🚀 Server đang chạy tại cổng ${PORT}`);
 });
