@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPT Voice Bot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    #chat-box {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+    }
+    .msg {
+      margin: 5px 0;
+      padding: 8px 12px;
+      border-radius: 8px;
+      max-width: 80%;
+    }
+    .user {
+      background: #007bff;
+      color: #fff;
+      margin-left: auto;
+      text-align: right;
+    }
+    .bot {
+      background: #eaeaea;
+      color: #000;
+      margin-right: auto;
+    }
+    #input-area {
+      display: flex;
+    }
+    #message {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    #send {
+      padding: 10px 15px;
+      margin-left: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>GPT Voice Bot</h1>
+  <div id="chat-box"></div>
+  <div id="input-area">
+    <input type="text" id="message" placeholder="Nhập tin nhắn..." />
+    <button id="send">Gửi</button>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const messageInput = document.getElementById("message");
+    const sendBtn = document.getElementById("send");
+
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.classList.add("msg", sender);
+      msg.textContent = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const text = messageInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      messageInput.value = "";
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await res.json();
+        addMessage(data.reply || "⚠️ Lỗi GPT", "bot");
+      } catch (err) {
+        addMessage("⚠️ Server error", "bot");
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    messageInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>
