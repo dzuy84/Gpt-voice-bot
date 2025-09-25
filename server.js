@@ -12,7 +12,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Validate API Keys
 if (!process.env.OPENAI_API_KEY || !process.env.SAPO_API_KEY || !process.env.SAPO_API_SECRET) {
   console.error("❌ Lỗi: Vui lòng kiểm tra lại các biến môi trường trong phần Environment của Render.");
   process.exit(1);
@@ -25,18 +24,15 @@ const client = new OpenAI({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Middlewares
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// =============================================================
-// HÀM GỌI API SAPO (ĐÃ CẬP NHẬT)
-// =============================================================
 async function searchSapoProducts(query) {
   const storeName = process.env.SAPO_STORE_NAME;
   const apiKey = process.env.SAPO_API_KEY;
   const apiSecret = process.env.SAPO_API_SECRET;
-  const apiVersion = "2024-03"; 
+  // SỬA ĐỔI QUAN TRỌNG: Cập nhật phiên bản API Sapo
+  const apiVersion = "2025-09"; 
   const apiUrl = `https://${storeName}.mysapo.net/admin/api/${apiVersion}/products.json`;
 
   console.log(`🔎 Đang tìm kiếm sản phẩm trên Sapo với từ khóa: "${query}"`);
@@ -48,9 +44,7 @@ async function searchSapoProducts(query) {
         password: apiSecret
       },
       params: {
-        // THAY ĐỔI QUAN TRỌNG:
-        // 'query' sẽ tìm kiếm từ khóa trên nhiều trường (tên, mô tả, tags...)
-        query: query, 
+        query: query,
         limit: 5
       }
     });
@@ -68,8 +62,7 @@ async function searchSapoProducts(query) {
   }
 }
 
-// API Chat Endpoint
-app.post("/api/chat", async (req, res) => {
+app.post("/api/chat", async (req, res). => {
   try {
     const { message } = req.body;
     if (!message) {
@@ -114,8 +107,7 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// API Voice Endpoint
-app.post("/api/voice", async (req, res) => {
+app.post("/api/voice", async (req, res). => {
   try {
     const { text } = req.body;
     if (!text) {
